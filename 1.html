@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简约三段式日常计划 - 强化显色版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f4f1ea;
+            color: #333; /* 文字稍微加深 */
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+        /* 极限超宽屏 —— 保持3800px */
+        .planner-container {
+            width: 100%;
+            max-width: 3800px; 
+            background: #ffffff; /* 纸张背景改为纯白，提升对比度 */
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 30px 80px;
+            border: 1.5px solid #dcd6c8; /* 边框加深 */
+            min-height: 98vh;
+            margin: 10px auto;
+        }
+        /* 头部排版 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #8b7e66; /* 底部双线感 */
+        }
+        .date-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .date-inputs {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #1a1a1a;
+        }
+        .date-line {
+            border-bottom: 2.5px solid #8b7e66; /* 线条加厚加深 */
+            width: 80px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .year-line { width: 100px; }
+        
+        .week-selector {
+            display: flex;
+            gap: 20px;
+            font-size: 1.1rem;
+            color: #666; /* 星期颜色加深 */
+        }
+        .week-day {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid #dcd6c8; /* 边框显眼化 */
+            border-radius: 4px;
+        }
+
+        /* 签名区 */
+        .signature-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .signature-label {
+            font-size: 0.75rem;
+            color: #8b7e66; /* 颜色加深 */
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .signature-line-box {
+            position: relative;
+            width: 240px;
+            height: 30px;
+            border-bottom: 2px solid #8b7e66;
+        }
+        .signature-line-box::after {
+            content: "";
+            position: absolute;
+            bottom: 3px;
+            left: 0;
+            right: 0;
+            border-bottom: 1px dashed #dcd6c8;
+        }
+
+        /* 主体网格 */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 100px;
+        }
+        .column-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            color: #8b7e66;
+            border-bottom: 2px solid #8b7e66; /* 标题线下划线加深 */
+            padding-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        /* 1. 待办清单线条加深 */
+        .todo-item {
+            display: flex;
+            align-items: center;
+            height: 36px;
+            border-bottom: 1px solid #dcd6c8; /* 线条颜色由浅黄灰改为深灰褐色 */
+        }
+        /* 2. 时间轴线条加深 */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+        }
+        .time-slot {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 36px;
+            position: relative;
+        }
+        .time-num {
+            width: 50px;
+            text-align: right;
+            font-size: 1rem;
+            color: #555; /* 数字加深 */
+            margin-right: 20px;
+            font-weight: 500;
+        }
+        .time-line-draw {
+            flex-grow: 1;
+            height: 1.2px;
+            background-color: #cccccc; /* 线条颜色加深，由 f2f2f2 改为 cccccc */
+        }
+        .special-time {
+            color: #fff;
+            font-weight: bold;
+            border: 2px solid #8b7e66;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.95rem;
+            background: #8b7e66; /* 高亮时间背景改为实色，更显眼 */
+        }
+        /* 3. 反思总结线条加深 */
+        .reflection-lines {
+            background-image: linear-gradient(#dcd6c8 1px, transparent 1px); /* 线条颜色加深 */
+            background-size: 100% 36px;
+            line-height: 36px;
+            min-height: 850px;
+            border-left: 1px solid #eee; /* 增加一个微弱的左边界感 */
+            padding-left: 10px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .planner-container { box-shadow: none; border: 1.5px solid #000; width: 100%; max-width: none; padding: 20px; }
+            .todo-item, .time-line-draw { border-color: #999 !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="planner-container">
+    <!-- 头部区域 -->
+    <div class="header">
+        <div class="date-section">
+            <div class="date-inputs">
+                <span class="year-line date-line"></span><span class="text-sm">年</span>
+                <span class="date-line"></span><span class="text-sm">月</span>
+                <span class="date-line"></span><span class="text-sm">日</span>
+            </div>
+            <div class="week-selector">
+                <div class="week-day">日</div>
+                <div class="week-day">一</div>
+                <div class="week-day">二</div>
+                <div class="week-day">三</div>
+                <div class="week-day">四</div>
+                <div class="week-day">五</div>
+                <div class="week-day">六</div>
+            </div>
+        </div>
+        
+        <!-- 签名区域 -->
+        <div class="signature-section">
+            <div class="signature-label">记录者 / Signature</div>
+            <div class="signature-line-box"></div>
+        </div>
+    </div>
+
+    <!-- 三段式主体 -->
+    <div class="main-grid">
+        <!-- 左侧：清单 -->
+        <div class="section">
+            <div class="column-title">待办清单 / To-do List</div>
+            <div class="todo-list">
+                <script>
+                    for(let i=0; i<28; i++) {
+                        document.write('<div class="todo-item"></div>');
+                    }
+                </script>
+            </div>
+        </div>
+
+        <!-- 中间：时间轴 -->
+        <div class="section">
+            <div class="column-title text-center">时间轴 / Timeline</div>
+            <div class="timeline">
+                <script>
+                    const dayHours = [];
+                    for(let i=4; i<=24; i++) dayHours.push(i);
+                    dayHours.push(1, 2, 3);
+                    const highlight = [6, 12, 18, 24]; 
+                    
+                    dayHours.forEach(i => {
+                        let h = i < 10 ? "0" + i : "" + i;
+                        let isHighlighted = highlight.includes(i);
+                        document.write(`
+                            <div class="time-slot">
+                                <div class="time-num">
+                                    ${isHighlighted ? `<span class="special-time">${h}</span>` : h}
+                                </div>
+                                <div class="time-line-draw"></div>
+                            </div>
+                        `);
+                    });
+                </script>
+            </div>
+        </div>
+
+        <!-- 右侧：反思 -->
+        <div class="section">
+            <div class="column-title">总结与感悟 / Reflections</div>
+            <div class="reflection-lines w-full opacity-100"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
